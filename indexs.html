@@ -1,0 +1,38 @@
+function doPost(e) {
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    var data = JSON.parse(e.postData.contents);
+    
+    // Format Kolom: No | Tanggal | Nama | Kelas | Absen | Materi | Jenis Tes | Nilai | Benar | Salah
+    var lastRow = sheet.getLastRow();
+    var no = lastRow === 0 ? 1 : lastRow; // atau nomor urut otomatis
+    
+    sheet.appendRow([
+      no,
+      data.tanggal,
+      data.nama,
+      data.kelas,
+      data.absen,
+      data.materi,
+      data.jenisTes,
+      data.nilai,
+      data.benar,
+      data.salah
+    ]);
+    
+    return ContentService
+      .createTextOutput(JSON.stringify({ "status": "success", "message": "Data berhasil disimpan" }))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ "status": "error", "message": error.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doGet(e) {
+  return ContentService
+    .createTextOutput(JSON.stringify({ "status": "online", "message": "PAI Alif Lam WebApp Service Active" }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
